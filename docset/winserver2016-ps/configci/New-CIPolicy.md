@@ -484,9 +484,12 @@ If the root attribute is set to the literal value 'Unknown' the rule will be sil
 
 This can pose an issue as the Fallback paramater used by New-CIPolicyRule or internally by New-CIPolicy is not properly triggered, resulting in incomplete rules. 
 
+Example content that will be silently skipped: 
+
 ```
 PS C:\> $DriverFiles = Get-SystemDriver -ScanPath "C:\Example" -UserPEs
-PS C:\> New-CIPolicyRule -Level Publisher -DriverFiles $DriverFiles
+PS C:\> $Rules = New-CIPolicyRule -Level Publisher -DriverFiles $DriverFiles 
+PS C:\> $Rules
 "Scan completed successfully"
 
 Name           : Example Certificate Root
@@ -503,6 +506,7 @@ FileException  : False
 UserMode       : True
 attributes     : {[CertPublisher, Example Certificate Holder]}
 
+PS C:> New-CIPolicy -FilePath .\Example.xml -Rules $Rules -Verbose
 
 ```
 
