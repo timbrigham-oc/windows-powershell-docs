@@ -479,6 +479,34 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## NOTES
 
+If a policy object is created by New-CIPolicyRule with level of 'Publisher' validate that the 'Root' attribute is set to a real TBS signature. 
+If the root attribute is set to the literal value 'Unknown' the rule will be silently dropped, and not imported by New-CiPolicy. 
+
+This can pose an issue as the Fallback paramater used by New-CIPolicyRule or internally by New-CIPolicy is not properly triggered, resulting in incomplete rules. 
+
+```
+PS C:\> $DriverFiles = Get-SystemDriver -ScanPath "C:\Example" -UserPEs
+PS C:\> New-CIPolicyRule -Level Publisher -DriverFiles $DriverFiles
+"Scan completed successfully"
+
+Name           : Example Certificate Root
+Id             : ID_SIGNER_xx_xxx
+TypeId         : Allow
+Root           : Unsupported
+FileVersionRef :
+AppIDRef       :
+Wellknown      : False
+Ekus           :
+Exceptions     :
+FileAttributes :
+FileException  : False
+UserMode       : True
+attributes     : {[CertPublisher, Example Certificate Holder]}
+
+
+```
+
+
 ## RELATED LINKS
 
 [Get-CIPolicy](./Get-CIPolicy.md)
